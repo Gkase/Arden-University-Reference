@@ -384,8 +384,8 @@
   <bibliography and="text"
                 et-al-min="4"
                 et-al-use-first="1"
-                entry-spacing="0"
-                hanging-indent="true">
+                entry-spacing="1"
+                hanging-indent="false">
     <sort>
       <key macro="author"/>
       <key macro="year-date"/>
