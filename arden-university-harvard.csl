@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="sort-only" default-locale="en-GB">
+  <info>
+    <title>Arden University Harvard</title>
+    <title-short>AU Harvard</title-short>
+    <id>http://www.zotero.org/styles/arden-university-harvard</id>
+    <link href="http://www.zotero.org/styles/arden-university-harvard" rel="self"/>
+    <link href="http://www.zotero.org/styles/harvard-cite-them-right" rel="template"/>
+    <link href="https://learningsuccess.arden.ac.uk" rel="documentation"/>
+    <author>
+      <name>Built for Arden University students (based on Cite Them Right 12th ed.)</name>
+    </author>
+    <category citation-format="author-date"/>
+    <category field="generic-base"/>
+    <summary>Arden University (AU) Harvard referencing style. Author Surname, INITIALS., (Year). Title. Place: Publisher. Matches the August 2024 AU Quick Guide.</summary>
+    <updated>2026-06-20T00:00:00+00:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
+  </info>
+
+  <!-- ============================================================
+       LOCALE: British English terms
+  ============================================================ -->
+  <locale xml:lang="en-GB">
+    <terms>
+      <term name="editor" form="short">
+        <single>ed.</single>
+        <multiple>eds.</multiple>
+      </term>
+      <term name="editortranslator" form="verb">edited and translated by</term>
+      <!-- AU spells out "edition" rather than abbreviating it -->
+      <term name="edition">edition</term>
+      <term name="edition" form="short">edition</term>
+      <term name="accessed">Accessed</term>
+      <term name="available at">Available from</term>
+      <term name="no date">no date</term>
+      <term name="anonymous">Anon.</term>
+      <term name="anonymous" form="short">Anon.</term>
+    </terms>
+  </locale>
+
+  <!-- ============================================================
+       MACRO: author
+       AU format: Surname, I.N., (one name per line in bib)
+       e.g. "Gross, R.," or "Smith, J. and Jones, P.,"
+  ============================================================ -->
+  <macro name="author">
+    <names variable="author">
+      <!-- initialize-with=". " gives "R." style initials with a space between initials -->
+      <name and="text"
+            delimiter-precedes-last="never"
+            initialize-with=". "
+            name-as-sort-order="all"
+            sort-separator=", "/>
+      <label form="short" prefix=" (" suffix=")"/>
+      <et-al font-style="italic"/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <choose>
+          <if type="article-newspaper article-magazine article-journal" match="any">
+            <text variable="container-title" text-case="title" font-style="italic"/>
+          </if>
+          <else>
+            <text macro="title"/>
+          </else>
+        </choose>
+      </substitute>
+    </names>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: author-short (for in-text citations)
+       e.g. Gross or Smith and Jones
+  ============================================================ -->
+  <macro name="author-short">
+    <names variable="author">
+      <name form="short"
+            and="text"
+            delimiter=", "
+            delimiter-precedes-last="never"
+            initialize-with=". "/>
+      <et-al font-style="italic"/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <choose>
+          <if type="article-newspaper article-magazine article-journal" match="any">
+            <text variable="container-title" text-case="title" font-style="italic"/>
+          </if>
+          <else>
+            <text macro="title"/>
+          </else>
+        </choose>
+      </substitute>
+    </names>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: editor (for chapter-in-book "In: Editor, I., eds.")
+  ============================================================ -->
+  <macro name="editor">
+    <choose>
+      <if type="chapter paper-conference" match="any">
+        <group delimiter=" ">
+          <text term="in" text-case="capitalize-first"/>
+          <names variable="container-author" delimiter=", " suffix=", ">
+            <name and="text" initialize-with=". "/>
+          </names>
+          <choose>
+            <if variable="container-author" match="none">
+              <names variable="editor translator" delimiter=", ">
+                <name and="text" initialize-with=". " name-as-sort-order="all"/>
+                <label form="short" prefix=" (" suffix=")"/>
+              </names>
+            </if>
+          </choose>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: secondary-contributors (e.g. "Edited by J. Smith")
+  ============================================================ -->
+  <macro name="secondary-contributors">
+    <choose>
+      <if type="chapter paper-conference" match="none">
+        <names variable="editor translator" delimiter=". ">
+          <label form="verb" text-case="capitalize-first" suffix=" "/>
+          <name and="text" initialize-with=". "/>
+        </names>
+      </if>
+      <else-if variable="container-author" match="any">
+        <names variable="editor translator" delimiter=". ">
+          <label form="verb" text-case="capitalize-first" suffix=" "/>
+          <name and="text" initialize-with=". " delimiter=", "/>
+        </names>
+      </else-if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: year-date
+       AU puts year in parentheses after author with a comma:
+       "Gross, R., (2015)."
+       The year macro itself just outputs the year; the surrounding
+       prefix/suffix are applied in the bibliography layout.
+  ============================================================ -->
+  <macro name="year-date">
+    <choose>
+      <if variable="issued">
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+        <text variable="year-suffix"/>
+      </if>
+      <else>
+        <text term="no date"/>
+        <text variable="year-suffix" prefix=" "/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: title
+       Books/reports/theses: italic. Articles/chapters: plain (no quotes in AU).
+       AU guide shows article titles unquoted and unitalicised.
+       Book titles use title case per AU examples.
+       Appends [online] for electronic sources.
+  ============================================================ -->
+  <macro name="title">
+    <choose>
+      <!-- Standalone works: italic -->
+      <if type="bill book legal_case legislation motion_picture report song thesis graphic" match="any">
+        <group delimiter=" ">
+          <text variable="title" font-style="italic" text-case="title"/>
+          <choose>
+            <if variable="URL DOI" match="any">
+              <text value="[online]"/>
+            </if>
+          </choose>
+        </group>
+      </if>
+      <!-- Webpage: italic title + [online] always -->
+      <else-if type="webpage post post-weblog" match="any">
+        <group delimiter=" ">
+          <text variable="title" font-style="italic"/>
+          <text value="[online]"/>
+        </group>
+      </else-if>
+      <!-- Article / chapter: plain title (AU does not quote article titles) -->
+      <else>
+        <text variable="title"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: container-title
+       Journal name in italic; add [online] if URL/DOI present.
+       AU format: Business Strategy Quarterly [online], 77 (6), pp. 455–456
+  ============================================================ -->
+  <macro name="container-title">
+    <choose>
+      <if variable="container-title">
+        <group delimiter=" ">
+          <text variable="container-title" font-style="italic"/>
+          <choose>
+            <if variable="URL DOI" match="any">
+              <text value="[online]"/>
+            </if>
+          </choose>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: edition
+       AU writes "7th edition" (spelled out).
+  ============================================================ -->
+  <macro name="edition">
+    <choose>
+      <if is-numeric="edition">
+        <group delimiter=" ">
+          <number variable="edition" form="ordinal"/>
+          <text term="edition"/>
+        </group>
+      </if>
+      <else>
+        <text variable="edition"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: locator (volume + issue for journals)
+       AU: "77 (6)" — volume then issue in parentheses, no comma between
+  ============================================================ -->
+  <macro name="locator">
+    <choose>
+      <if type="article-journal article-magazine article-newspaper" match="any">
+        <group delimiter=" ">
+          <text variable="volume"/>
+          <text variable="issue" prefix="(" suffix=")"/>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: pages
+  ============================================================ -->
+  <macro name="pages">
+    <choose>
+      <if type="chapter paper-conference article-journal article article-magazine article-newspaper review review-book" match="any">
+        <group delimiter=" ">
+          <label variable="page" form="short"/>
+          <text variable="page"/>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: publisher
+       AU: Place of publication: Publisher.
+       e.g. "London: Hodder Education."
+  ============================================================ -->
+  <macro name="publisher">
+    <choose>
+      <if type="thesis">
+        <group delimiter=". ">
+          <text variable="genre"/>
+          <text variable="publisher"/>
+        </group>
+      </if>
+      <else-if type="report">
+        <group delimiter=". ">
+          <group delimiter=" ">
+            <text variable="genre"/>
+            <text variable="number"/>
+          </group>
+          <group delimiter=": ">
+            <text variable="publisher-place"/>
+            <text variable="publisher"/>
+          </group>
+        </group>
+      </else-if>
+      <else-if type="article-journal article-newspaper article-magazine" match="none">
+        <group delimiter=": ">
+          <text variable="publisher-place"/>
+          <text variable="publisher"/>
+        </group>
+      </else-if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: published-date (day + month for newspapers/magazines)
+  ============================================================ -->
+  <macro name="published-date">
+    <choose>
+      <if type="article-newspaper article-magazine post-weblog speech" match="any">
+        <date variable="issued">
+          <date-part name="day" suffix=" "/>
+          <date-part name="month" form="long"/>
+        </date>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       MACRO: access
+       AU: "Available from: URL [Accessed 4 August 2016]."
+       Note AU uses "Available from:" not "Available at:"
+  ============================================================ -->
+  <macro name="access">
+    <choose>
+      <if variable="DOI">
+        <group delimiter=": ">
+          <text term="available at" text-case="capitalize-first"/>
+          <text variable="DOI" prefix="https://doi.org/"/>
+        </group>
+      </if>
+      <else-if variable="URL">
+        <group delimiter=" ">
+          <text term="available at" text-case="capitalize-first" suffix=":"/>
+          <text variable="URL"/>
+          <group prefix="[" suffix="]" delimiter=" ">
+            <text term="accessed" text-case="capitalize-first"/>
+            <date variable="accessed" form="text">
+              <date-part name="day"/>
+              <date-part name="month" form="long"/>
+              <date-part name="year"/>
+            </date>
+          </group>
+        </group>
+      </else-if>
+    </choose>
+  </macro>
+
+  <!-- ============================================================
+       IN-TEXT CITATION
+       AU: (Gross, 2015) or (Gross, 2015, p. 33)
+       3 authors: (Smith, Jones and Brown, 2020)
+       4+ authors: (Smith et al., 2020)
+  ============================================================ -->
+  <citation et-al-min="4"
+            et-al-use-first="1"
+            disambiguate-add-year-suffix="true"
+            disambiguate-add-names="true"
+            disambiguate-add-givenname="true"
+            collapse="year">
+    <sort>
+      <key macro="year-date"/>
+    </sort>
+    <layout prefix="(" suffix=")" delimiter="; ">
+      <group delimiter=", ">
+        <group delimiter=", ">
+          <text macro="author-short"/>
+          <text macro="year-date"/>
+        </group>
+        <group>
+          <label variable="locator" form="short" suffix=" "/>
+          <text variable="locator"/>
+        </group>
+      </group>
+    </layout>
+  </citation>
+
+  <!-- ============================================================
+       BIBLIOGRAPHY
+       AU reference list format. Key differences from Cite Them Right:
+       - Year in parentheses after author with preceding comma:
+           Gross, R., (2015). Title. ...
+       - Volume (Issue) with space: 77 (6)
+       - "Available from:" not "Available at:"
+       - "edition" spelled out
+       - Article titles unquoted and unitalicised
+       - [online] appended to title for digital sources
+       et-al-min="4": list all authors up to 3, then "et al." for 4+
+  ============================================================ -->
+  <bibliography and="text"
+                et-al-min="4"
+                et-al-use-first="1"
+                entry-spacing="0"
+                hanging-indent="true">
+    <sort>
+      <key macro="author"/>
+      <key macro="year-date"/>
+      <key variable="title"/>
+    </sort>
+    <layout suffix=".">
+      <!-- AUTHOR, (YEAR) -->
+      <group delimiter=" ">
+        <text macro="author" suffix=","/>
+        <text macro="year-date" prefix="(" suffix=")."/>
+      </group>
+      <text value=" "/>
+
+      <!-- TYPE-SPECIFIC BODY -->
+      <choose>
+
+        <!-- ── JOURNAL ARTICLE ──────────────────────────────── -->
+        <if type="article-journal article-magazine article-newspaper" match="any">
+          <group delimiter=". ">
+            <!-- Article title (plain, no quotes per AU guide) -->
+            <text variable="title"/>
+            <!-- Journal name [online], Volume (Issue), pp. X–Y -->
+            <group delimiter=", ">
+              <text macro="container-title"/>
+              <text macro="locator"/>
+              <text macro="published-date"/>
+              <text macro="pages"/>
+            </group>
+          </group>
+          <text macro="access" prefix=". "/>
+        </if>
+
+        <!-- ── BOOK ─────────────────────────────────────────── -->
+        <else-if type="book" match="any">
+          <group delimiter=". ">
+            <text macro="title"/>
+            <text macro="edition"/>
+            <text macro="secondary-contributors"/>
+            <text macro="publisher"/>
+          </group>
+          <text macro="access" prefix=". "/>
+        </else-if>
+
+        <!-- ── CHAPTER IN EDITED BOOK ────────────────────────── -->
+        <else-if type="chapter paper-conference" match="any">
+          <group delimiter=". ">
+            <!-- Chapter title -->
+            <text variable="title"/>
+            <!-- "In: Editor, I., eds. (Year). Book Title [online]. Edition. Place: Publisher, pp. X–Y" -->
+            <group delimiter=" ">
+              <text macro="editor"/>
+              <text variable="container-title" font-style="italic" text-case="title"/>
+              <choose>
+                <if variable="URL DOI" match="any">
+                  <text value="[online]"/>
+                </if>
+              </choose>
+            </group>
+            <text macro="edition"/>
+            <text macro="publisher"/>
+            <text macro="pages"/>
+          </group>
+          <text macro="access" prefix=". "/>
+        </else-if>
+
+        <!-- ── WEBPAGE / POST ────────────────────────────────── -->
+        <else-if type="webpage post post-weblog" match="any">
+          <group delimiter=". ">
+            <text macro="title"/>
+            <text macro="publisher"/>
+          </group>
+          <text macro="access" prefix=". "/>
+        </else-if>
+
+        <!-- ── REPORT / INSTITUTIONAL ────────────────────────── -->
+        <else-if type="report" match="any">
+          <group delimiter=". ">
+            <text macro="title"/>
+            <text macro="publisher"/>
+          </group>
+          <text macro="access" prefix=". "/>
+        </else-if>
+
+        <!-- ── THESIS ─────────────────────────────────────────── -->
+        <else-if type="thesis" match="any">
+          <group delimiter=". ">
+            <text macro="title"/>
+            <text macro="publisher"/>
+          </group>
+          <text macro="access" prefix=". "/>
+        </else-if>
+
+        <!-- ── FALLBACK ───────────────────────────────────────── -->
+        <else>
+          <group delimiter=". ">
+            <text macro="title"/>
+            <text macro="secondary-contributors"/>
+            <text macro="publisher"/>
+          </group>
+          <group delimiter=", " prefix=", ">
+            <text macro="locator"/>
+            <text macro="published-date"/>
+            <text macro="pages"/>
+          </group>
+          <text macro="access" prefix=". "/>
+        </else>
+
+      </choose>
+    </layout>
+  </bibliography>
+</style>
