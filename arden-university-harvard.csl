@@ -188,9 +188,9 @@
           <text value="[online]"/>
         </group>
       </else-if>
-      <!-- Article / chapter: plain title (AU does not quote article titles) -->
+      <!-- Article / chapter: plain title, sentence case (normalises imported metadata) -->
       <else>
-        <text variable="title"/>
+        <text variable="title" text-case="sentence"/>
       </else>
     </choose>
   </macro>
@@ -241,7 +241,8 @@
     <choose>
       <if type="article-journal article-magazine article-newspaper" match="any">
         <group delimiter=" ">
-          <text variable="volume"/>
+          <!-- Use number rendering to strip any "Volume"/"Vol." prefix from imported metadata -->
+          <number variable="volume"/>
           <text variable="issue" prefix="(" suffix=")"/>
         </group>
       </if>
