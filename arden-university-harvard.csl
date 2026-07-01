@@ -32,7 +32,7 @@
       <term name="edition" form="short">edition</term>
       <term name="accessed">Accessed</term>
       <term name="available at">Available from</term>
-      <term name="no date">no date</term>
+      <term name="no date">N.D.</term>
       <term name="anonymous">Anon.</term>
       <term name="anonymous" form="short">Anon.</term>
     </terms>
@@ -108,10 +108,16 @@
           </names>
           <choose>
             <if variable="container-author" match="none">
-              <names variable="editor translator" delimiter=", ">
-                <name and="text" initialize-with=". " name-as-sort-order="all"/>
-                <label form="short" prefix=" (" suffix=")"/>
-              </names>
+              <!-- Output: Surname, I., eds. (Year). per AU guide Cudney example -->
+              <group delimiter=" ">
+                <names variable="editor translator" delimiter=", ">
+                  <name and="text" initialize-with=". " name-as-sort-order="all"/>
+                  <label form="short" prefix=" (" suffix=")"/>
+                </names>
+                <date variable="issued" prefix="(" suffix=")">
+                  <date-part name="year"/>
+                </date>
+              </group>
             </if>
           </choose>
         </group>
@@ -317,11 +323,21 @@
        Note AU uses "Available from:" not "Available at:"
   ============================================================ -->
   <macro name="access">
+    <!-- AU guide makes no distinction between DOI and URL sources:
+         both need "Available from:" and "[Accessed date]" -->
     <choose>
       <if variable="DOI">
-        <group delimiter=": ">
-          <text term="available at" text-case="capitalize-first"/>
+        <group delimiter=" ">
+          <text term="available at" text-case="capitalize-first" suffix=":"/>
           <text variable="DOI" prefix="https://doi.org/"/>
+          <group prefix="[" suffix="]" delimiter=" ">
+            <text term="accessed" text-case="capitalize-first"/>
+            <date variable="accessed" form="text">
+              <date-part name="day"/>
+              <date-part name="month" form="long"/>
+              <date-part name="year"/>
+            </date>
+          </group>
         </group>
       </if>
       <else-if variable="URL">
@@ -347,7 +363,7 @@
        3 authors: (Smith, Jones and Brown, 2020)
        4+ authors: (Smith et al., 2020)
   ============================================================ -->
-  <citation et-al-min="4"
+  <citation et-al-min="7"
             et-al-use-first="1"
             disambiguate-add-year-suffix="true"
             disambiguate-add-names="true"
@@ -383,7 +399,7 @@
        et-al-min="4": list all authors up to 3, then "et al." for 4+
   ============================================================ -->
   <bibliography and="text"
-                et-al-min="4"
+                et-al-min="7"
                 et-al-use-first="1"
                 entry-spacing="1"
                 hanging-indent="false">
@@ -406,8 +422,8 @@
         <!-- ── JOURNAL ARTICLE ──────────────────────────────── -->
         <if type="article-journal article-magazine article-newspaper" match="any">
           <group delimiter=". ">
-            <!-- Article title (plain, no quotes per AU guide) -->
-            <text variable="title"/>
+            <!-- Article title: routed through macro to apply sentence case -->
+            <text macro="title"/>
             <!-- Journal name [online], Volume (Issue), pp. X–Y -->
             <group delimiter=", ">
               <text macro="container-title"/>
@@ -462,19 +478,34 @@
         </else-if>
 
         <!-- ── REPORT / INSTITUTIONAL ────────────────────────── -->
+        <!-- AU format: Title [online]. Place: Publisher. Report Number (if given).
+             e.g. Humpback whale feeding in Santa Catarina coastal waters. Brazil: Bio Med Central. Report s41200 -->
         <else-if type="report" match="any">
           <group delimiter=". ">
             <text macro="title"/>
-            <text macro="publisher"/>
+            <group delimiter=": ">
+              <text variable="publisher-place"/>
+              <text variable="publisher"/>
+            </group>
+            <group delimiter=" ">
+              <text value="Report"/>
+              <text variable="number"/>
+            </group>
           </group>
           <text macro="access" prefix=". "/>
         </else-if>
 
         <!-- ── THESIS ─────────────────────────────────────────── -->
+        <!-- AU format: Title. Thesis (type). Institution.
+             e.g. Molecular recognition in plant immunity. Thesis (PhD). University of East Anglia. -->
         <else-if type="thesis" match="any">
           <group delimiter=". ">
             <text macro="title"/>
-            <text macro="publisher"/>
+            <group delimiter=" ">
+              <text value="Thesis"/>
+              <text variable="genre" prefix="(" suffix=")"/>
+            </group>
+            <text variable="publisher"/>
           </group>
           <text macro="access" prefix=". "/>
         </else-if>
