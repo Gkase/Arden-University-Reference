@@ -359,12 +359,18 @@
 
   <!-- ============================================================
        IN-TEXT CITATION
-       AU: (Gross, 2015) or (Gross, 2015, p. 33)
-       3 authors: (Smith, Jones and Brown, 2020)
-       4+ authors: (Smith et al., 2020)
+       AU guide rules:
+       - 1-2 authors: always list all surnames
+       - 3-5 authors: list ALL on first citation, then first + et al. subsequently
+       - 6+ authors: first author + et al. immediately (every citation)
+       et-al-min="6" fires et al at 6+ always
+       et-al-subsequent-min="3" fires et al from 2nd citation onwards for 3+ authors
+       et-al-subsequent-use-first="1" shows only first author on subsequent citations
   ============================================================ -->
-  <citation et-al-min="7"
+  <citation et-al-min="6"
             et-al-use-first="1"
+            et-al-subsequent-min="3"
+            et-al-subsequent-use-first="1"
             disambiguate-add-year-suffix="true"
             disambiguate-add-names="true"
             disambiguate-add-givenname="true"
@@ -396,7 +402,7 @@
        - "edition" spelled out
        - Article titles unquoted and unitalicised
        - [online] appended to title for digital sources
-       et-al-min="4": list all authors up to 3, then "et al." for 4+
+       et-al-min="7": list all authors up to 6 in reference list, then "et al." for 7+
   ============================================================ -->
   <bibliography and="text"
                 et-al-min="7"
