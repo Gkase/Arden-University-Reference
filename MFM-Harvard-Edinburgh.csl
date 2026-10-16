@@ -77,7 +77,7 @@
     </layout>
   </citation>
 
-  <bibliography hanging-indent="true" entry-spacing="1" line-spacing="1" et-al-min="100" et-al-use-first="99">
+  <bibliography hanging-indent="false" entry-spacing="1" line-spacing="1" et-al-min="100" et-al-use-first="99">
     <sort>
       <key macro="author-bib"/>
       <key variable="issued"/>
